@@ -94,6 +94,47 @@ namespace Cinema
             return true;
         }
 
+        // Получение информации про фильмы
+        public Dictionary<string, Dictionary<string, string>> getFilmsInfWithOutFilterAndSearch()
+        {
+            Dictionary<string, Dictionary<string, string>> returnFilmsInf = new Dictionary<string, Dictionary<string, string>>();
+            
+            using (SqlConnection conn = new SqlConnection(connectionURL))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    // Создаем команду как в T-SQL
+                    cmd.CommandText = @"
+                    Use CinemaShop
+                    SELECT film_id, film_name, film_picture, film_cost
+                    FROM Магазин;
+                    ";
+
+                    // Получаем ответ на запрос и разбираем его по кортежам и колонкам
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        Dictionary<string, string> oneFilmInformation = new Dictionary<string, string>()
+                        {
+                            {"Название", ""}, {"Цена", ""}, {"Фото", ""}
+                        };
+                        // сначала в обычный словарь
+                        oneFilmInformation["Цена"] = ("" + dr["film_cost"]).Trim();
+                        oneFilmInformation["Фото"] = ("" + dr["film_picture"]).Trim();
+                        oneFilmInformation["Название"] = ("" + dr["film_name"]).Trim();
+                        // теперь в основной
+                        returnFilmsInf[("" + dr["film_id"]).Trim()] = oneFilmInformation;
+
+                    }
+                    dr.Close();
+                }
+                conn.Close();
+            }
+            return returnFilmsInf;
+        }
+
         // Проверка почты и пароля при авторизации пользователя
         public bool checkCustomerAccDataToSighUp(string email, string password)
         {

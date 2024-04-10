@@ -11,7 +11,11 @@
             <Setter Property="Background" Value="#252646" />
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
-
+        
+        <!-- Стиль для смены полосы прокрута {ScrollBar}-->
+        <Style x:Key="scrollBarDesign_style" TargetType="ScrollBar">
+            <Setter Property="Background" Value="Black"/>
+        </Style>
 
         <!--  Стиль для области регистрации {Border}  -->
         <Style x:Key="registration_authorizationPlace_style" TargetType="Border">

@@ -24,6 +24,50 @@ namespace Cinema
         public MainWindow()
         {
             InitializeComponent();
+            completeFilmCards(null);
+        }
+
+
+
+        private void completeFilmCards(string searchingFilmName)
+        {
+            // Очищаем старую информацию из области перед заполнением
+            FilmShower.Children.Clear();
+            
+            
+            
+            // Если это подборка фильмов без фильтраg, 
+            if (searchingFilmName == null )
+            {
+                // Формат : НазваниеФильма - {Фото:Фото.png; Цена:Цена руб;} 
+                // Словарь куда будет приходить информация про фильмы
+                Dictionary<string, Dictionary<string, string>> filmsInf = new DatabaseWork().getFilmsInfWithOutFilterAndSearch();
+                GenerateObjectsByWPF wpfGenerate = new GenerateObjectsByWPF();
+                foreach(var filmID in  filmsInf)
+                {
+                    Border filmCard = wpfGenerate.generateFilmCard("_" + filmID.Key);
+                    Grid grid = new Grid();
+                    foreach(var filmInformation in filmID.Value)
+                    {
+                        // Если ключ внутреннего словаря
+                        switch(filmInformation.Key)
+                        {
+                            case ("Название"):
+                                // Добавляем объект в grid
+                                grid.Children.Add(wpfGenerate.generateTitleFilmName(filmInformation.Value));
+                                break;
+                            case ("Цена"):
+                                break;
+                            case ("Фото"):
+                                break;
+                        }
+                    }
+                    // добавляем grid на карточку фильма
+                    filmCard.Child = grid;
+                    // Добавляем карточку в общий список
+                    FilmShower.Children.Add(filmCard);
+                }
+            }
         }
         
         // Перенос окна

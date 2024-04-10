@@ -67,6 +67,7 @@
     <Compile Include="CashWork.cs" />
     <Compile Include="CheckInputInformation.cs" />
     <Compile Include="DatabaseWork.cs" />
+    <Compile Include="GenerateObjectsByWPF.cs" />
     <Compile Include="RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>

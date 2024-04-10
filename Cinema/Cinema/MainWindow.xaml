@@ -78,6 +78,16 @@
                     Source="Images/Filtr.png"
                     Style="{StaticResource searchButton_style}" />
             </Grid>
+            <Grid Grid.Row="1">
+                <ScrollViewer >
+                    <Grid>
+
+                        <StackPanel x:Name="FilmShower" />
+
+                    </Grid>
+
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
