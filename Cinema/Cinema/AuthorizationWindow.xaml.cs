@@ -80,6 +80,22 @@ namespace Cinema
             accountWindow.Show();
         }
 
+
+        // Переход к окну регистрации
+        public void goRegistrationWindow(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("goRegistrationWindow");
+            RegistrationWindow registrationWindow = new RegistrationWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = Left,
+                Top = Top
+            };
+
+            this.Visibility = Visibility.Collapsed;
+            registrationWindow.Show();
+        }
+
         // Авторизация пользователя
         public void doCustomerEnter(object sender, RoutedEventArgs e)
         {

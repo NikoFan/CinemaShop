@@ -85,7 +85,7 @@ namespace Cinema
         public void goAuthorizationWindow(object sender, RoutedEventArgs e)
         {
             Console.WriteLine(Settings.Default["CustomerID"].ToString());
-            if (Settings.Default["CustomerID"].ToString() == "nth")
+            if (Settings.Default["CustomerID"].ToString() == "nth" || Settings.Default["CustomerID"].ToString() == "")
             {
                 AuthorizationWindow authorizationWindow = new AuthorizationWindow()
                 {

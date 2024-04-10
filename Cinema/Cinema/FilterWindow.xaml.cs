@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cinema.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,10 @@ namespace Cinema
     /// </summary>
     public partial class FilterWindow : Window
     {
-        Border empty = new Border()
+        /*Border empty = new Border()
         {
             Name = "EMPTY"
-        };
+        };*/
         // Список для хранения выбранных пунктов фильтра
         public List<Border> choosenAgeBorders = new List<Border>();
         public List<Border> choosenTypeBorders = new List<Border>();
@@ -30,9 +31,9 @@ namespace Cinema
         public FilterWindow()
         {
             InitializeComponent();
-            choosenAgeBorders.Add(empty);
+            /*choosenAgeBorders.Add(empty);
             choosenCountryBorders.Add(empty);
-            choosenTypeBorders.Add(empty);
+            choosenTypeBorders.Add(empty);*/
         }
 
 
@@ -45,7 +46,7 @@ namespace Cinema
             }
             // Очищаем список
             choosenCountryBorders = new List<Border>();
-            choosenCountryBorders.Add(empty);
+            // choosenCountryBorders.Add(empty);
         }
 
         // Очистка фильтра Возраст
@@ -57,7 +58,7 @@ namespace Cinema
             }
             // Очищаем список
             choosenAgeBorders = new List<Border>();
-            choosenAgeBorders.Add(empty);
+            // choosenAgeBorders.Add(empty);
         }
 
         // Очистка фильтра Жанр
@@ -69,7 +70,7 @@ namespace Cinema
             }
             // Очищаем список
             choosenTypeBorders = new List<Border>();
-            choosenTypeBorders.Add(empty);
+            // choosenTypeBorders.Add(empty);
         }
 
         // Перенос окна
@@ -196,6 +197,43 @@ namespace Cinema
 
         }
 
+        // Переход на окно аккаунта
+        private void accountWindowOpen()
+        {
+            Account accountWindow = new Account()
+            {
+                WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = Left,
+                Top = Top
+            };
+
+            this.Visibility = Visibility.Collapsed;
+            accountWindow.Show();
+        }
+
+        // Переход к Аккаунта
+        public void goAuthorizationWindow(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(Settings.Default["CustomerID"].ToString());
+            if (Settings.Default["CustomerID"].ToString() == "nth" || Settings.Default["CustomerID"].ToString() == "")
+            {
+                AuthorizationWindow authorizationWindow = new AuthorizationWindow()
+                {
+                    WindowStartupLocation = WindowStartupLocation.Manual,
+                    Left = Left,
+                    Top = Top
+                };
+
+                this.Visibility = Visibility.Collapsed;
+                authorizationWindow.Show();
+                return;
+            }
+            // если пользователь авторизован
+            accountWindowOpen();
+
+        }
+        
+
         // Обработка фильтра
         public void AcceptFilter(object sender, RoutedEventArgs e)
         {
@@ -205,11 +243,36 @@ namespace Cinema
                 Console.WriteLine(choosenCountryBorders[0].Name.ToString());
                 Console.WriteLine(choosenTypeBorders[0].Name.ToString());
                 Console.WriteLine(choosenAgeBorders[0].Name.ToString());
+                
+
+                
+
+
             }
             catch (Exception)
             {
                 Console.WriteLine("nth");
             }
+            if (choosenCountryBorders.Count > 0 ||
+                choosenAgeBorders.Count > 0 ||
+                choosenTypeBorders.Count > 0)
+            {
+                Settings.Default["filter"] = "yes";
+            }
+            else
+            {
+                Console.WriteLine("ПУСТОООООЙ");
+                Settings.Default["filter"] = "";
+            }
+            while (choosenCountryBorders.Count != 4)
+                choosenCountryBorders.Add(null);
+            while (choosenAgeBorders.Count != 4)
+                choosenAgeBorders.Add(null);
+            while (choosenTypeBorders.Count != 4)
+                choosenTypeBorders.Add(null);
+            new CashWork().countryAdder(choosenCountryBorders);
+            new CashWork().ageAdder(choosenAgeBorders);
+            new CashWork().styleAdder(choosenTypeBorders);
 
             Console.WriteLine("go back");
             MainWindow mainWindow = new MainWindow()
@@ -218,6 +281,8 @@ namespace Cinema
                 Left = Left,
                 Top = Top
             };
+
+            
 
             this.Visibility = Visibility.Collapsed;
             mainWindow.Show();

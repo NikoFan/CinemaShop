@@ -94,6 +94,56 @@ namespace Cinema
             return true;
         }
 
+        // Получение информации про фильмы по поиску
+        public Dictionary<string, Dictionary<string, string>> getSearchFilmsInf(string userSearchMessage)
+        {
+            Dictionary<string, Dictionary<string, string>> returnFilmsInf = new Dictionary<string, Dictionary<string, string>>();
+
+            using (SqlConnection conn = new SqlConnection(connectionURL))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    // Создаем команду как в T-SQL
+                    cmd.CommandText = $@"
+                    Use CinemaShop
+                    SELECT * 
+                    FROM Магазин
+                    Where film_name = N'{userSearchMessage}';
+                    ";
+
+                    // Получаем ответ на запрос и разбираем его по кортежам и колонкам
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        Dictionary<string, string> oneFilmInformation = new Dictionary<string, string>()
+                        {
+                            {"Название", ""}, {"Цена", ""}, {"Фото", ""}, {"Страна", ""}, {"Время", ""}, {"Жанр", ""}, {"Категория", ""},
+                            {"Возраст", ""}, {"Рейтинг", ""}
+                        };
+                        // сначала в обычный словарь
+                        oneFilmInformation["Цена"] = ("" + dr["film_cost"]).Trim();
+                        oneFilmInformation["Фото"] = ("" + dr["film_picture"]).Trim();
+                        oneFilmInformation["Название"] = ("" + dr["film_name"]).Trim();
+                        oneFilmInformation["Страна"] = ("" + dr["film_country"]).Trim();
+                        oneFilmInformation["Время"] = ("" + dr["film_duration"]).Trim();
+                        oneFilmInformation["Жанр"] = ("" + dr["film_style"]).Trim();
+                        oneFilmInformation["Категория"] = ("" + dr["film_category"]).Trim();
+                        oneFilmInformation["Возраст"] = ("" + dr["film_age_control"]).Trim();
+                        oneFilmInformation["Рейтинг"] = ("" + dr["film_rating"]).Trim();
+                        // теперь в основной
+                        returnFilmsInf[("" + dr["film_id"]).Trim()] = oneFilmInformation;
+
+                    }
+                    dr.Close();
+                }
+                conn.Close();
+            }
+            return returnFilmsInf;
+        }
+
+
         // Получение информации про фильмы
         public Dictionary<string, Dictionary<string, string>> getFilmsInfWithOutFilterAndSearch()
         {
@@ -108,7 +158,7 @@ namespace Cinema
                     // Создаем команду как в T-SQL
                     cmd.CommandText = @"
                     Use CinemaShop
-                    SELECT film_id, film_name, film_picture, film_cost
+                    SELECT * 
                     FROM Магазин;
                     ";
 
@@ -118,12 +168,19 @@ namespace Cinema
                     {
                         Dictionary<string, string> oneFilmInformation = new Dictionary<string, string>()
                         {
-                            {"Название", ""}, {"Цена", ""}, {"Фото", ""}
+                            {"Название", ""}, {"Цена", ""}, {"Фото", ""}, {"Страна", ""}, {"Время", ""}, {"Жанр", ""}, {"Категория", ""},
+                            {"Возраст", ""}, {"Рейтинг", ""}
                         };
                         // сначала в обычный словарь
                         oneFilmInformation["Цена"] = ("" + dr["film_cost"]).Trim();
                         oneFilmInformation["Фото"] = ("" + dr["film_picture"]).Trim();
                         oneFilmInformation["Название"] = ("" + dr["film_name"]).Trim();
+                        oneFilmInformation["Страна"] = ("" + dr["film_country"]).Trim();
+                        oneFilmInformation["Время"] = ("" + dr["film_duration"]).Trim();
+                        oneFilmInformation["Жанр"] = ("" + dr["film_style"]).Trim();
+                        oneFilmInformation["Категория"] = ("" + dr["film_category"]).Trim();
+                        oneFilmInformation["Возраст"] = ("" + dr["film_age_control"]).Trim();
+                        oneFilmInformation["Рейтинг"] = ("" + dr["film_rating"]).Trim();
                         // теперь в основной
                         returnFilmsInf[("" + dr["film_id"]).Trim()] = oneFilmInformation;
 
@@ -170,6 +227,94 @@ namespace Cinema
             return false;
         }
 
+        // Поиск по фильтру
+        public Dictionary<string, Dictionary<string, string>> getFilterFilmsInf()
+        {
+            Settings.Default["filter"] = null;
+            Settings.Default.Save();
+            
+            Dictionary<string, Dictionary<string, string>> returnFilmsInf = new Dictionary<string, Dictionary<string, string>>();
+            Console.WriteLine();
+            using (SqlConnection conn = new SqlConnection(connectionURL))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    // Создаем команду как в T-SQL
+                    cmd.CommandText = $@"
+                    Use CinemaShop
+                    SELECT * 
+                    FROM Магазин
+WHERE 
+    film_country in (
+    
+        select film_country
+        from Магазин
+        where film_country = N'{Settings.Default["Country1"].ToString().Trim()}'
+        or
+        film_country = N'{Settings.Default["Country2"].ToString().Trim()}'
+        or
+        film_country = N'{Settings.Default["Country3"].ToString().Trim()}'
+        or
+        film_country = N'{Settings.Default["Country4"].ToString().Trim()}')
+
+and film_age_control in (
+    
+        select film_age_control
+	    from Магазин
+        where film_age_control = {Settings.Default["Age1"].ToString().Trim()}
+        or
+        film_age_control = {Settings.Default["Age2"].ToString().Trim()}
+        or
+        film_age_control = {Settings.Default["Age3"].ToString().Trim()}
+        or
+        film_age_control = {Settings.Default["Age4"].ToString().Trim()})
+
+and film_style in (
+    
+        select film_style
+	    from Магазин
+        where film_style = N'{Settings.Default["Style1"].ToString().Trim()}'
+        or
+        film_style = N'{Settings.Default["Style2"].ToString().Trim()}'
+        or
+        film_style = N'{Settings.Default["Style3"].ToString().Trim()}'
+        or
+        film_style = N'{Settings.Default["Style4"].ToString().Trim()}')
+                    ";
+
+                    // Получаем ответ на запрос и разбираем его по кортежам и колонкам
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        Console.WriteLine(123);
+                        Dictionary<string, string> oneFilmInformation = new Dictionary<string, string>()
+                        {
+                            {"Название", ""}, {"Цена", ""}, {"Фото", ""}, {"Страна", ""}, {"Время", ""}, {"Жанр", ""}, {"Категория", ""},
+                            {"Возраст", ""}, {"Рейтинг", ""}
+                        };
+                        // сначала в обычный словарь
+                        oneFilmInformation["Цена"] = ("" + dr["film_cost"]).Trim();
+                        oneFilmInformation["Фото"] = ("" + dr["film_picture"]).Trim();
+                        oneFilmInformation["Название"] = ("" + dr["film_name"]).Trim();
+                        oneFilmInformation["Страна"] = ("" + dr["film_country"]).Trim();
+                        oneFilmInformation["Время"] = ("" + dr["film_duration"]).Trim();
+                        oneFilmInformation["Жанр"] = ("" + dr["film_style"]).Trim();
+                        oneFilmInformation["Категория"] = ("" + dr["film_category"]).Trim();
+                        oneFilmInformation["Возраст"] = ("" + dr["film_age_control"]).Trim();
+                        oneFilmInformation["Рейтинг"] = ("" + dr["film_rating"]).Trim();
+                        // теперь в основной
+                        returnFilmsInf[("" + dr["film_id"]).Trim()] = oneFilmInformation;
+
+                    }
+                    dr.Close();
+                }
+                conn.Close();
+            }
+            return returnFilmsInf;
+        }
+
 
         // Получение полной информации про пользователя для заполнения окна аккаунта
         public Dictionary<string, string> takeCustomerAccountInformation()
@@ -178,7 +323,7 @@ namespace Cinema
             {
                 {"Имя", ""}, {"Пароль", ""}, {"Почта", ""}, {"Возраст", ""}
             };
-
+            Console.WriteLine(Settings.Default["CustomerID"].ToString());
             using (SqlConnection conn = new SqlConnection(connectionURL))
             {
                 conn.Open();

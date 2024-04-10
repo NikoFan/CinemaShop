@@ -37,6 +37,7 @@
                     Style="{StaticResource HeadButtons_style}" />
                 <Button
                     x:Name="userAuthorizationButton"
+                    Click="goAuthorizationWindow"
                     Content="Аккаунт"
                     Style="{StaticResource HeadButtons_style}" />
             </StackPanel>
@@ -68,25 +69,25 @@
 
                         <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                             <Border
-                                x:Name="from_0_to_10"
+                                x:Name="_6"
                                 MouseDown="ChooseAge"
                                 Style="{StaticResource FilterPoint_style}">
-                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="до 10" />
+                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="6+" />
                             </Border>
                             <Border
-                                x:Name="from_10_to_16"
+                                x:Name="_10"
                                 MouseDown="ChooseAge"
                                 Style="{StaticResource FilterPoint_style}">
-                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="10-16" />
+                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="10+" />
                             </Border>
                             <Border
-                                x:Name="from_16_to_18"
+                                x:Name="_16"
                                 MouseDown="ChooseAge"
                                 Style="{StaticResource FilterPoint_style}">
-                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="16-18" />
+                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="16+" />
                             </Border>
                             <Border
-                                x:Name="from_18_to_all"
+                                x:Name="_18"
                                 MouseDown="ChooseAge"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="от 18" />
@@ -107,25 +108,25 @@
 
                         <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                             <Border
-                                x:Name="Camedy"
+                                x:Name="Комедия"
                                 MouseDown="ChooseType"
                                 Style="{StaticResource FilterPoint_style}">
-                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="Камедия" />
+                                <TextBlock Style="{StaticResource FilterhintText_style}" Text="Комедия" />
                             </Border>
                             <Border
-                                x:Name="Horror"
+                                x:Name="Хоррор"
                                 MouseDown="ChooseType"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="Хоррор" />
                             </Border>
                             <Border
-                                x:Name="Love"
+                                x:Name="Любовь"
                                 MouseDown="ChooseType"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="Любовь" />
                             </Border>
                             <Border
-                                x:Name="Block_buster"
+                                x:Name="Экшен"
                                 MouseDown="ChooseType"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="Экшен" />
@@ -143,25 +144,25 @@
                             Style="{StaticResource FilterClearButton_style}" />
                         <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                             <Border
-                                x:Name="Russia"
+                                x:Name="Россия"
                                 MouseDown="ChooseCountry"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="Россия" />
                             </Border>
                             <Border
-                                x:Name="USA"
+                                x:Name="США"
                                 MouseDown="ChooseCountry"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="США" />
                             </Border>
                             <Border
-                                x:Name="Turkey"
+                                x:Name="Турция"
                                 MouseDown="ChooseCountry"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="Турция" />
                             </Border>
                             <Border
-                                x:Name="France"
+                                x:Name="Франция"
                                 MouseDown="ChooseCountry"
                                 Style="{StaticResource FilterPoint_style}">
                                 <TextBlock Style="{StaticResource FilterhintText_style}" Text="Франция" />
