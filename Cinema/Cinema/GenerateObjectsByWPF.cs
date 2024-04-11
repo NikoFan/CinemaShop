@@ -81,6 +81,7 @@ namespace Cinema
             card.MouseDown += (sender, args) =>
             {
                 cardColorChange_MD(card);
+                
             };
 
             card.MouseUp += (sender, args) =>

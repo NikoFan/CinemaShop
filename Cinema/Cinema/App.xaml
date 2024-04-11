@@ -12,6 +12,47 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
 
+        <!--  стиль для окна оплаты {Grid}  -->
+        <Style x:Key="paymentWindow_style" TargetType="Border">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Height" Value="450" />
+            <Setter Property="Width" Value="400" />
+            <Setter Property="CornerRadius" Value="40" />
+
+        </Style>
+
+        <!--  Стиль для заглавного текста окна оплаты {TextBlock}  -->
+        <Style x:Key="TitlePaymentsText_style" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <!--  Стиль для обычного текста окна оплаты {TextBlock}  -->
+        <Style x:Key="NormalPaymentsText_style" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Margin" Value="30,0,0,0" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <!--  Стиль для обычного текста окна оплаты {TextBlock}  -->
+        <Style x:Key="NormalPaymentsTextBox_style" TargetType="TextBox">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Width" Value="340" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="Margin" Value="30,0,0,0" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
         <!--  Стиль для смены полосы прокрута {ScrollBar}  -->
         <Style x:Key="scrollBarDesign_style" TargetType="ScrollBar">
             <Setter Property="Background" Value="Black" />
@@ -34,6 +75,17 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Margin" Value="40,20,0,0" />
         </Style>
+
+
+        <!--  Стиль для прочерка под текстом {Line}  -->
+        <Style x:Key="underPayLine_style" TargetType="Line">
+            <Setter Property="Stroke" Value="White" />
+            <Setter Property="X1" Value="20" />
+            <Setter Property="Y1" Value="0" />
+            <Setter Property="X2" Value="370" />
+            <Setter Property="Y2" Value="0" />
+        </Style>
+
 
         <!--  Стиль для прочерка под вводом {Line}  -->
         <Style x:Key="underLine_style" TargetType="Line">
@@ -121,6 +173,158 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="cross_1line" TargetType="Line">
+            <Setter Property="Stroke" Value="White" />
+            <Setter Property="StrokeThickness" Value="5" />
+            <Setter Property="X1" Value="76" />
+            <Setter Property="Y1" Value="0" />
+            <Setter Property="X2" Value="0" />
+            <Setter Property="Y2" Value="76" />
+        </Style>
+
+        <Style x:Key="cross_2line" TargetType="Line">
+            <Setter Property="Stroke" Value="White" />
+            <Setter Property="StrokeThickness" Value="5" />
+            <Setter Property="X1" Value="0" />
+            <Setter Property="Y1" Value="0" />
+            <Setter Property="X2" Value="80" />
+            <Setter Property="Y2" Value="80" />
+        </Style>
+
+        <!--  Кнопка Отмены оплаты {Button}  -->
+        <Style x:Key="CancelButton_style" TargetType="Button">
+            <Setter Property="Height" Value="80" />
+            <Setter Property="Width" Value="80" />
+            <Setter Property="Background" Value="#853D3F" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <!--  Убрать системный фон кнопки  -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="Black"
+                            BorderThickness="2"
+                            CornerRadius="50">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!--  Тригер - менять цвет при наведении курсора  -->
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    AutoReverse="False"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    From="#853D3F"
+                                    To="#C43639"
+                                    Duration="0:0:0.5" />
+
+
+                            </Storyboard>
+
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <!--  Тригер при отведении курсора - возвращать прежний цвет  -->
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    AutoReverse="False"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    From="#C43639"
+                                    To="#853D3F"
+                                    Duration="0:0:0.5" />
+
+
+                            </Storyboard>
+
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <!--  Кнопка оплаты {Button}  -->
+        <Style x:Key="PayButton_style" TargetType="Button">
+            <Setter Property="Height" Value="100" />
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Background" Value="Green" />
+            <Setter Property="Margin" Value="0,20,0,20" />
+            <Setter Property="FontSize" Value="45" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <!--  Убрать системный фон кнопки  -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="White"
+                            BorderThickness="2"
+                            CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <!--  Тригер - менять цвет при наведении курсора  -->
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    AutoReverse="False"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    From="Green"
+                                    To="DarkGreen"
+                                    Duration="0:0:0.5" />
+
+
+                            </Storyboard>
+
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <!--  Тригер при отведении курсора - возвращать прежний цвет  -->
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    AutoReverse="False"
+                                    Storyboard.TargetProperty="Background.Color"
+                                    From="DarkGreen"
+                                    To="Green"
+                                    Duration="0:0:0.5" />
+
+
+                            </Storyboard>
+
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
 
         <!--  Стиль для тела программы {Grid}  -->
         <Style x:Key="WindowBody_style" TargetType="Grid">

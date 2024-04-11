@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +25,10 @@ namespace Cinema
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string computerFoldersPATH = Convert.ToString(String.Join("\\", Environment.CurrentDirectory.ToString().Split('\\').Take(
+                                                        Environment.CurrentDirectory.ToString().Split('\\').Length - 2))) + "/Images/";
+        public string computerNewFoldersPATH = Convert.ToString(String.Join("\\", Environment.CurrentDirectory.ToString().Split('\\').Take(
+                                                        Environment.CurrentDirectory.ToString().Split('\\').Length - 4))) + "\\film.mp4";
         public MainWindow()
         {
             InitializeComponent();
@@ -29,7 +36,6 @@ namespace Cinema
             if (Settings.Default["filter"].ToString() != "")
             {
                 Console.WriteLine("--" + Settings.Default["filter"].ToString());
-                
                 completeFilmCardsFilter();
             }
                 
@@ -38,8 +44,62 @@ namespace Cinema
                 Console.WriteLine("-+" + Settings.Default["filter"].ToString());
                 completeFilmCards(null);
             }
-                
+
+
         }
+        // Разблокировка окна
+        public void UnlockWindow()
+        {
+            WaitActionPanel.Visibility = Visibility.Hidden;
+            Payment.Visibility = Visibility.Hidden;
+        }
+        private string film_id_num = null;
+        public void Pay(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Оплата");
+            if (Settings.Default["CustomerID"].ToString() != "nth" && Settings.Default["CustomerID"].ToString() != "")
+            {
+                new DatabaseWork().payInDB(film_id_num);
+                Console.WriteLine(computerNewFoldersPATH);
+                
+                File.Copy(computerFoldersPATH + "filmExample.mp4", computerNewFoldersPATH);
+                UsersMessage("Файл находится по адресу: " + computerNewFoldersPATH);
+            }
+            else
+            {
+                UsersMessage("Создайте аккаунт или войдите в существующий!");
+            }
+            UnlockWindow();
+            film_id_num = null;
+        }
+
+        public void Cancel(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Отмена");
+            UnlockWindow();
+            film_id_num = null;
+        }
+
+        private void complitePayInf(string film_id)
+        {
+            film_id_num = film_id;
+            List<string> inf = new DatabaseWork().payInf(film_id);
+            film_name.Text = inf[0];
+            film_cost.Text = inf[1]+"р.";
+        }
+        // Старт операции оплаты
+        public void startPaymentOperation(Border card)
+        {
+
+            // Блокировка окна
+            Payment.Visibility = Visibility.Visible;
+            complitePayInf(card.Name.ToString().Split('_')[1]);
+            WaitActionPanel.Visibility = Visibility.Visible;
+            
+            
+
+        }
+
 
         // Заполнение с фильтром
         private void completeFilmCardsFilter()
@@ -50,13 +110,7 @@ namespace Cinema
             // Формат : НазваниеФильма - {Фото:Фото.png; Цена:Цена руб;} 
             // Словарь куда будет приходить информация про фильмы
             Dictionary<string, Dictionary<string, string>> filmsInf = new Dictionary<string, Dictionary<string, string>>();
-
-
             filmsInf = new DatabaseWork().getFilterFilmsInf();
-
-
-
-
             GenerateObjectsByWPF wpfGenerate = new GenerateObjectsByWPF();
             foreach (var filmID in filmsInf)
             {
@@ -98,8 +152,7 @@ namespace Cinema
                             break;
                         case ("Фото"):
                             // Путь к фото
-                            string computerFoldersPATH = Convert.ToString(String.Join("\\", Environment.CurrentDirectory.ToString().Split('\\').Take(
-                                                        Environment.CurrentDirectory.ToString().Split('\\').Length - 2))) + "/Images/";
+                            
                             BitmapImage img
                             = new BitmapImage(
                                             new Uri($@"{computerFoldersPATH}{filmInformation.Value}"));
@@ -119,6 +172,10 @@ namespace Cinema
                 grid.Children.Add(InfPanel);
 
                 filmCard.Child = grid;
+                filmCard.MouseDown += (sender, args) =>
+                {
+                    startPaymentOperation(filmCard);
+                };
                 // Добавляем карточку в общий список
                 FilmShower.Children.Add(filmCard);
             }
@@ -189,8 +246,6 @@ namespace Cinema
                             break;
                         case ("Фото"):
                             // Путь к фото
-                            string computerFoldersPATH = Convert.ToString(String.Join("\\", Environment.CurrentDirectory.ToString().Split('\\').Take(
-                                                        Environment.CurrentDirectory.ToString().Split('\\').Length - 2))) + "/Images/";
                             BitmapImage img
                             = new BitmapImage(
                                             new Uri($@"{computerFoldersPATH}{filmInformation.Value}"));
@@ -209,7 +264,12 @@ namespace Cinema
                 // добавляем grid на карточку фильма
                 grid.Children.Add(InfPanel);
 
+
                 filmCard.Child = grid;
+                filmCard.MouseDown += (sender, args) =>
+                {
+                    startPaymentOperation(filmCard);
+                };
                 // Добавляем карточку в общий список
                 FilmShower.Children.Add(filmCard);
             }

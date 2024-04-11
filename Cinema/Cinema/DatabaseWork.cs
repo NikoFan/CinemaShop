@@ -19,6 +19,7 @@ namespace Cinema
             "Password=arseniy_008;" + // Пароль пользователя базы данных
             "TrustServerCertificate=True;"; // Уровень доверия к серверу
         public int activeID = 1; // Используется для заполнения базы данных и хранит в себе последний id
+        public int activePayID = 1;
 
         // Узнаем последний ID в Пользовательской таблице
         private void takeCurrentID()
@@ -56,6 +57,96 @@ namespace Cinema
                 conn.Close();
             }
 
+        }
+
+        private void takeCurrentPayID()
+        {
+            // Используем строку подключения для соединения с БД на сервере
+            using (SqlConnection conn = new SqlConnection(connectionURL))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    // Создаем команду как в T-SQL
+                    cmd.CommandText = @"
+                    Use CinemaShop
+                    SELECT payment_id
+                    FROM Оплата;
+                    ";
+
+                    // Получаем ответ на запрос и разбираем его по кортежам и колонкам
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    // Перебираем каждый кортеж
+                    // Формат обращения к клонке
+                    // "" + dr["Имя Колонки"] | Пример ниже
+                    while (dr.Read())
+                    {
+                        // Получаем id
+                        string id = "" + dr["payment_id"];
+                        // Последнее используемое id + 1 = новое id сразу после последнего
+                        // Пример: Последнее = 5, добавляемая строка требует след по счету id
+                        // 5 + 1 = 6 - это будет id для новой строки
+                        activePayID = Convert.ToInt32(id) + 1;
+                    }
+                    dr.Close();
+                }
+                conn.Close();
+            }
+
+        }
+
+        // Получение информации для заполнении оплаты
+        public List<string> payInf(string film_id)
+        {
+            List<string> returnInf = new List<string>();
+            using (SqlConnection conn = new SqlConnection(connectionURL))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    // Создаем команду как в T-SQL
+                    cmd.CommandText = $@"
+                    Use CinemaShop
+                    SELECT film_name, film_cost
+                    FROM Магазин
+                    where film_id = {film_id};
+                    ";
+
+                    // Получаем ответ на запрос и разбираем его по кортежам и колонкам
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        returnInf.Add(("" + dr["film_name"]).Trim());
+                        returnInf.Add(("" + dr["film_cost"]).Trim());
+                    }
+                    dr.Close();
+                }
+                conn.Close();
+
+            }
+            return returnInf;
+        }
+
+
+        // Оплата
+        public void payInDB(string film_id)
+        {
+            takeCurrentPayID();
+            Console.WriteLine($"{activePayID}, {Settings.Default["CustomerID"]},{film_id}") ;
+            using (SqlConnection connection = new SqlConnection(connectionURL))
+            {
+
+                connection.Open();
+                // Заполняем таблицу оплата
+                SqlCommand commandToAddInformationFromTable = new SqlCommand($@"
+                Use CinemaShop
+                INSERT INTO Оплата
+                VALUES({activePayID}, {Settings.Default["CustomerID"]},{film_id})");
+                commandToAddInformationFromTable.Connection = connection;
+                commandToAddInformationFromTable.ExecuteNonQuery();
+            }
         }
 
         // Проверка что нет почт, совпадающих с той что пытаются зарегистрировать

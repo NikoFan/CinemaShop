@@ -13,6 +13,7 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Grid>
+
         <Grid x:Name="Head" Style="{StaticResource WindowHead_style}">
             <!--  Располагает объекты внутри себя друг под другом  -->
             <StackPanel x:Name="usersActions">
@@ -79,7 +80,7 @@
                     Style="{StaticResource searchButton_style}" />
             </Grid>
             <Grid Grid.Row="1">
-                <ScrollViewer >
+                <ScrollViewer>
                     <Grid>
 
                         <StackPanel x:Name="FilmShower" />
@@ -89,6 +90,51 @@
                 </ScrollViewer>
             </Grid>
         </Grid>
+        <!--  Блокировка окна  -->
+        <Grid
+            x:Name="WaitActionPanel"
+            Background="Black"
+            Opacity="0.5"
+            Visibility="Hidden" />
+        <!--  Блок оплаты  -->
+        <Border
+            x:Name="Payment"
+            Style="{StaticResource paymentWindow_style}"
+            Visibility="Hidden">
+            <StackPanel>
+                <TextBlock Style="{StaticResource TitlePaymentsText_style}" Text="Оплата" />
+                <TextBlock Style="{StaticResource NormalPaymentsText_style}" Text="Фильм:" />
+                <TextBox
+                    x:Name="film_name"
+                    FontStyle="Italic"
+                    FontWeight="Normal"
+                    Style="{StaticResource NormalPaymentsTextBox_style}"
+                    Text="123" />
+                <Line Style="{StaticResource underPayLine_style}" />
+                <TextBlock Style="{StaticResource NormalPaymentsText_style}" Text="Цена:" />
+                <TextBlock
+                    x:Name="film_cost"
+                    FontStyle="Italic"
+                    FontWeight="Normal"
+                    Style="{StaticResource NormalPaymentsText_style}"
+                    Text="123" />
+                <Line Style="{StaticResource underPayLine_style}" />
+                <Button
+                    Click="Pay"
+                    Content="Оплатить"
+                    Style="{StaticResource PayButton_style}" />
+                <Button Click="Cancel" Style="{StaticResource CancelButton_style}">
+                    <Grid>
+                        <Line Style="{StaticResource cross_1line}" />
+                        <Line Style="{StaticResource cross_2line}" />
+                    </Grid>
+                </Button>
+            </StackPanel>
+
+
+
+        </Border>
+
     </Grid>
 </Window>
 

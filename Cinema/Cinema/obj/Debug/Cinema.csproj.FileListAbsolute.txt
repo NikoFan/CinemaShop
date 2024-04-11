@@ -52,3 +52,4 @@ C:\Users\Олег\Desktop\Тестовое\Cinema\CinemaShop\Cinema\Cinema\obj\D
 C:\Users\Олег\Desktop\Тестовое\Cinema\CinemaShop\Cinema\Cinema\obj\Debug\Cinema.csproj.CopyComplete
 C:\Users\Олег\Desktop\Тестовое\Cinema\CinemaShop\Cinema\Cinema\obj\Debug\Cinema.exe
 C:\Users\Олег\Desktop\Тестовое\Cinema\CinemaShop\Cinema\Cinema\obj\Debug\Cinema.pdb
+C:\Users\Олег\Desktop\Тестовое\Cinema\CinemaShop\Cinema\Cinema\obj\Debug\Cinema_Content.g.cs
